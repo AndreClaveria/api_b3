@@ -1,0 +1,30 @@
+{
+  "name": "api_b3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/app.js",
+  "scripts": {
+    "dev": "nodemon ./src/app.js",
+    "start": "node ./src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreClaveria/api_b3.git"
+  },
+  "author": "andre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreClaveria/api_b3/issues"
+  },
+  "homepage": "https://github.com/AndreClaveria/api_b3#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.2"
+  }
+}
