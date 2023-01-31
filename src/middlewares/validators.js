@@ -35,7 +35,5 @@ exports.validation = (req, res, next) => {
       errors:errors.array()
     })
   }
-  
   next();
-  
 }
