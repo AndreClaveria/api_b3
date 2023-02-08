@@ -1,11 +1,16 @@
 const { body, validationResult } = require('express-validator')
 
 exports.checkMail = [
-    body('userMail').isEmail().withMessage("Email format is not valid")
+    body('userMail').isEmail().withMessage("Email format is not valid or is already use")
+];
+
+exports.checkName = [
+  body("firstName").isAlphanumeric().withMessage("Firstname format is not valid"),
+  body("lastName").isAlphanumeric().withMessage("Lastname format is not valid"),
 ];
 
 exports.checkCompanyData = [
-  body("companyName").isAlphanumeric().withMessage("Company name format is not valid"),
+  body("companyName").isAscii().withMessage("Company name format is not valid"),
   body("companyStatus").custom((value) => {
     if (value != "SAS" && value != "SASU" && value != "SARL" && value != "EURL") {
       throw new Error(
@@ -17,6 +22,11 @@ exports.checkCompanyData = [
   body("companySiret").isAlphanumeric().isLength({min: 9, max: 9}).withMessage("Siret format is not valid"),
 
 ];
+
+exports.checkFreelanceData = [
+  body("userExp").isAlphanumeric().withMessage("User experience format is not valid"),
+  body("dailyTax").isAlphanumeric().withMessage("Daily tax format is not valid"),
+]
 
 exports.checkPassword = [
     body('userPassword')
