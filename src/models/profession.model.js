@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 
-const JobSchema = mongoose.Schema({
-    jobName: {
+const ProfessionSchema = mongoose.Schema({
+    professionName: {
     type: String,
     lowercase: true,
     required: true,
+    unique: true,
     minLength: 3,
     maxLength: 50
   }
@@ -14,4 +15,4 @@ const JobSchema = mongoose.Schema({
   }
 )
 
-module.exports = mongoose.model("jobs", JobSchema);
+module.exports = mongoose.model("profession", ProfessionSchema);

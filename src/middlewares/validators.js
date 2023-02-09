@@ -33,6 +33,7 @@ exports.checkPassword = [
     .notEmpty()
     .isLength({ min: 6, max: 30 })
     .matches(/^[A-Za-z0-9 .,'!&(§è!çà)]+$/)
+    .withMessage("You should put your password or Did you forget password? Go on /forgot")
 ];
 
 exports.validation = (req, res, next) => {

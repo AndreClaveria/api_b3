@@ -64,7 +64,11 @@ const FreelanceSchema = mongoose.Schema(
         },
         jobs: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "jobs"
+            ref: "profession"
+        },
+        mission: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "mission"
         },
         isAdmin: {
             type: Boolean,
