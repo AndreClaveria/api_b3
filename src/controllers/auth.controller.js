@@ -9,10 +9,10 @@ exports.registerAdmin = async (req, res) => {
     const userTo = req.body.lastName;
     const sentTo = req.body.userMail;
     Admin.find().then((admin) => {
-        if(admin) {
+        if(admin.length === 0) {
             const newAdmin = new Admin({
                 adminName: "Admin",
-                userMail: "admin@ynov.com",
+                userMail: req.body.userMail,
                 userPassword: req.body.userPassword,
             });
           
@@ -30,6 +30,10 @@ exports.registerAdmin = async (req, res) => {
               });
               console.log("Admin already created : Go on /admin/login");
             });      
+        } else {
+          return res.status(404).send({
+            message: "An Admin already exist",
+          });
         }
     }) 
     .catch(err=>res.status(400).send(err))  

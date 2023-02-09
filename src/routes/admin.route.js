@@ -23,8 +23,8 @@ router.get("/professions/:id", verifyToken, verifyIsAdmin, admin.getOneProfessio
 //POST
 router.post("/register", checkPassword, validation, auth.registerAdmin);
 router.post("/login", checkMail, checkPassword, validation, auth.loginAdmin);
-router.post("/create/skill", verifyToken, verifyIsAdmin, admin.createSkill);
-router.post("/create/profession", verifyToken, verifyIsAdmin, admin.createProfession);
+router.post("/skills/create", verifyToken, verifyIsAdmin, admin.createSkill);
+router.post("/professions/create", verifyToken, verifyIsAdmin, admin.createProfession);
 
 //DELETE
 router.delete("/companies/:id", verifyToken, verifyIsAdmin, admin.deleteCompany);

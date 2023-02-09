@@ -62,16 +62,30 @@ exports.forgetPassword = (req, res) => {
 //CREATE MISSION
 
 exports.createMission = (req, res) => {
-    const newMission = new Mission({
-        missionCreator: req.userToken.id,
+    Mission.create({
+        missionCreator: "12312",
         startingDate: req.body.startingDate,
         endingDate: req.body.endingDate,
         missionPrice: req.body.missionPrice,
         missionDescription: req.body.missionDescription,
         missionTitle: req.body.missionTitle,
-        missionJobs: req.body.missionJobs,
+        missionProfessions: req.body.missionProfessions,
         missionSkills: req.body.missionSkills,
-        missionStatus: req.body.missionStatus,
         missionPeople: req.body.missionPeople,
-    })
+    }).then((mission) => {
+        if(mission.missionSkills === 0) {
+            return res.status(400).send({
+                message: `You have to choose Freelancer make go on profil`
+            })
+        }
+        if(mission.missionPeople > 3) {
+            return res.status(400).send({
+                message: "You can just put 3 freelances at max !",
+            });
+        } else {
+          console.log("Task : " + mission.missionTitle + " created !");
+          res.send(mission);
+        }
+    }).catch((err) => res.status(400).send(err));
 }
+

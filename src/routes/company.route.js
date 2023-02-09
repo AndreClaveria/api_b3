@@ -14,7 +14,7 @@ router.put('/forget', company.forgetPassword);
 router.get('/', verifyToken, verifyIsCompany);
 router.post('/register', checkName, checkMail, checkPassword, checkCompanyData, validation, auth.registerCompany);
 router.post('/login', checkMail, checkPassword, validation, auth.loginCompany);
-
+router.post('/missions/create', company.createMission);
 
 
 module.exports = router;

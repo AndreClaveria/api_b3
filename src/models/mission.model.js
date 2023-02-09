@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const MissionSchema = mongoose.Schema(
   {
     missionCreator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Company",
+        type: String,
+        required: true
     },
     startingDate: {
         type: Date,
@@ -28,7 +28,7 @@ const MissionSchema = mongoose.Schema(
         required: true,
         minLength: 4,
     },
-    missionJobs: {
+    missionProfessions: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "profession",
@@ -40,13 +40,14 @@ const MissionSchema = mongoose.Schema(
     },
     missionStatus: {
         type: String,
-        lowercase: true,
         required: true,
+        default: "En cours"
     },
     missionPeople: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "Freelance",
+        status: { type : String, enum: ["accepted", "refused", "pending"]}
     }
   },
   {

@@ -68,7 +68,8 @@ const FreelanceSchema = mongoose.Schema(
         },
         mission: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "mission"
+            ref: "mission",
+            status: { type : String, enum: ["accepted", "refused", "pending"]}
         },
         isAdmin: {
             type: Boolean,
