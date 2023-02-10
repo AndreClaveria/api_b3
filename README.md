@@ -52,6 +52,8 @@
 
     et prenez le userToken et mettez le dans le .env
 
+## COMPANY ##
+
     Dans localhost:PORT/api/v1/company/register
 
 - Faite un post :
@@ -74,7 +76,8 @@
 
     et prenez le userToken et mettez le dans le .env
 
-#
+## FREELANCE ##
+
     Dans localhost:PORT/api/v1/freelance/register
 
 - Faite un post :
@@ -87,7 +90,6 @@
     "dailyTax": 100
 }
 
-#
     puis localhost:PORT/api/v1/freelance/login
 - Faite un post :
 {
