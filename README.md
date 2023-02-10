@@ -34,6 +34,7 @@
 
 # Par ou commencer #
 
+## ADMIN ##
     Dans localhost:PORT/api/v1/admin/register
 
 - Faite un post :
