@@ -116,16 +116,16 @@ exports.getOneProfession = (req, res) => {
 };
 
 exports.getMissions = (req, res) => {
-  Profession.find().then((professions) => {
-    res.send(professions);
-    console.log(professions);
+  Mission.find().then((missions) => {
+    res.send(missions);
+    console.log(missions);
   }).catch((err) => res.status(400).send(err));
 };
 
-exports.getOneProfession = (req, res) => {
-  Profession.findById(req.params.id).then((profession) => {
-    res.send(profession);
-    console.log(profession);
+exports.getOneMission = (req, res) => {
+  Mission.findById(req.params.id).then((mission) => {
+    res.send(mission);
+    console.log(mission);
   }).catch((err) => res.status(400).send(err));
 };
 

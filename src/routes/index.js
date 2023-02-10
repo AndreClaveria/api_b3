@@ -5,7 +5,8 @@ const companyRouter = require("./company.route");
 const freelanceRouter = require("./freelance.route");
 var bodyParser = require('body-parser')
 
-router.use(bodyParser.json())
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 router.use("/admin", adminRouter);
 router.use("/company", companyRouter);
 router.use("/freelance", freelanceRouter);

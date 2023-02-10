@@ -7,19 +7,23 @@ const verifyToken = require('../middlewares/verifyToken');
 const { checkMail, checkPassword, validation, checkFreelanceData, checkName, checkCompanyData } = require('../middlewares/validators');
 
 //PROFIL
+router.get("/", verifyToken, verifyIsAdmin);
 router.get('/profil', verifyToken, verifyIsAdmin, admin.getProfil);
 router.put('/profil', checkPassword, validation, verifyToken, verifyIsAdmin, admin.updateProfil);
 router.put('/forget', admin.forgetPassword);
 //GET
-router.get("/", verifyToken, verifyIsAdmin);
+
 router.get("/companies", verifyToken, verifyIsAdmin, admin.getCompanies);
 router.get("/freelances", verifyToken, verifyIsAdmin, admin.getFreelances);
 router.get("/skills", verifyToken, verifyIsAdmin, admin.getSkills);
-router.get("/professions", verifyToken, verifyIsAdmin, admin.getProfessions)
+router.get("/professions", verifyToken, verifyIsAdmin, admin.getProfessions);
+router.get("/missions", verifyToken, verifyIsAdmin, admin.getMissions);
 router.get("/companies/:id", verifyToken, verifyIsAdmin, admin.getOneCompany);
 router.get("/freelances/:id", verifyToken, verifyIsAdmin, admin.getOneFreelance);
 router.get("/skills/:id", verifyToken, verifyIsAdmin, admin.getOneSkill);
 router.get("/professions/:id", verifyToken, verifyIsAdmin, admin.getOneProfession);
+router.get("/missions/:id", verifyToken, verifyIsAdmin, admin.getOneMission);
+
 //POST
 router.post("/register", checkPassword, validation, auth.registerAdmin);
 router.post("/login", checkMail, checkPassword, validation, auth.loginAdmin);

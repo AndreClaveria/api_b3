@@ -6,15 +6,18 @@ const { checkName, checkMail, checkCompanyData, checkPassword, validation } = re
 const verifyIsCompany = require('../middlewares/verifyIsCompany');
 const verifyToken = require('../middlewares/verifyToken');
 
+router.get('/', verifyToken, verifyIsCompany);
 
 router.get('/profil', verifyToken, verifyIsCompany, company.getProfil);
 router.put('/profil', checkPassword, validation, verifyToken, verifyIsCompany, company.updateProfil);
-router.put('/forget', company.forgetPassword);
+router.get('/profil/missions', verifyToken, verifyIsCompany, company.getMyMission);
+router.get('/freelances', verifyToken, verifyIsCompany, company.getAllFreelance);
+router.put('/forget', company.forgetPassword, verifyToken, verifyIsCompany, company.getMyMission);
+router.put('/missions/:id', verifyToken, verifyIsCompany, company.modifyMission);
 
-router.get('/', verifyToken, verifyIsCompany);
 router.post('/register', checkName, checkMail, checkPassword, checkCompanyData, validation, auth.registerCompany);
 router.post('/login', checkMail, checkPassword, validation, auth.loginCompany);
-router.post('/missions/create', company.createMission);
+router.post('/missions/create', verifyToken, verifyIsCompany, company.createMission);
 
 
 module.exports = router;

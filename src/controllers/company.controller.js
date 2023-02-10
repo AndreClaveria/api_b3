@@ -59,11 +59,29 @@ exports.forgetPassword = (req, res) => {
     })
 }
 
+exports.getMyMission = (req, res) => {    
+    Mission.find({missionCreator: req.userToken.id}).then((missions) => {
+        
+        res.send(missions);
+        console.log(missions);
+        
+        
+    }).catch((err) => res.status(400).send(err));
+}
+
+exports.getAllFreelance = (req, res) => {
+    Freelance.find().then((freelance) => {
+        res.send(freelance);
+        console.log(freelance);
+    })
+}
+
 //CREATE MISSION
 
 exports.createMission = (req, res) => {
+    
     Mission.create({
-        missionCreator: "12312",
+        missionCreator: req.userToken.id,
         startingDate: req.body.startingDate,
         endingDate: req.body.endingDate,
         missionPrice: req.body.missionPrice,
@@ -73,19 +91,100 @@ exports.createMission = (req, res) => {
         missionSkills: req.body.missionSkills,
         missionPeople: req.body.missionPeople,
     }).then((mission) => {
-        if(mission.missionSkills === 0) {
-            return res.status(400).send({
-                message: `You have to choose Freelancer make go on profil`
-            })
-        }
-        if(mission.missionPeople > 3) {
-            return res.status(400).send({
-                message: "You can just put 3 freelances at max !",
-            });
+        console.log(mission._id);
+        if(mission.missionPeople.length === 0) {
+            Mission.findByIdAndRemove(mission._id).then((del) => {
+                return res.status(400).send({
+                    message: `You have to choose Freelancer make go on profil`
+                })
+            }).catch((err) => res.status(400).send(err));    
+        } else if(mission.missionPeople.length > 3) {
+            Mission.findByIdAndRemove(mission._id).then((del) => {
+                return res.status(400).send({
+                    message: "You can just put 3 freelances at max !",
+                });
+            }).catch((err) => res.status(400).send(err));  
         } else {
           console.log("Task : " + mission.missionTitle + " created !");
-          res.send(mission);
+  
+            for (let index = 0; index < mission.missionPeople.length; index++) {
+                console.log(mission.missionPeople[index]);
+                Freelance.findByIdAndUpdate({_id: mission.missionPeople[index]}, { $push: {mission: mission._id}}).then((updated) => {
+                   
+                }).catch((err) => res.status(400).send(err));
+            }
+            res.status(200).send({
+                message: "Freelance added"
+            })  
         }
     }).catch((err) => res.status(400).send(err));
 }
+
+exports.modifyMission = (req, res) => {
+    if(req.body.missionStatus === "En cours" || req.body.missionStatus === "Cloture" || req.body.missionStatus === undefined )  {
+        if(req.body.missionPeople.length <= 3 || req.body.missionPeople === undefined) {
+            Mission.findByIdAndUpdate(req.params.id, req.body).then((mission) => {
+                if(mission.missionCreator === req.userToken.id) {
+                    if(!mission) {
+                        console.log("NOTFOUND");
+                          return res.status(404).send({
+                            message: "Mission not found"
+                          });
+                    } 
+                    
+                    if(mission.missionStatus === "En cours" || mission.missionStatus === "Cloture") {
+                        
+                            for (let index = 0; index < mission.missionPeople.length; index++) {
+                                console.log(mission.missionPeople[index]);
+                                Freelance.findById(mission.missionPeople[index]).then((modify) => {
+                              
+                                    for (let i = 0; i < modify.mission.length; i++) {
+                                        console.log(modify.mission.length)
+                                        if(modify.mission.length == 0) {
+                                            console.log("Ton tableau est vide")
+                                        }
+                                        if(req.params.id == modify.mission[i]) {
+                                            console.log( "Pour " + mission.missionPeople[index] + " j'ai déja trouvé " + modify.mission[i])
+                                            break;
+                                        } 
+                                    }
+                                    
+                                })
+                            }
+                            console.log(mission.missionPeople[0]);
+                        
+                        res.status(200).send({
+                            message: "Mission : " + mission.missionTitle + " changed"
+                        });
+                    } else {
+                        Mission.findOneAndUpdate({missionStatus : mission.missionStatus}, {missionStatus : "En cours"})
+                        res.status(400).send({
+                            message: "Your mission has to be En cours ou Cloture"
+                        });  
+                    }
+                    
+                } else {
+                   
+                    res.status(404).send({
+                        message: "You're not the owner of this mission"
+                    });  
+                }
+                       
+            }).catch(() => res.status(400).send({
+                message: "ID: " + req.params.id + " doesn't exist"
+            }));
+        } else {
+            res.status(400).send({
+                message: "You cannot put more than 3 freelance in your mission"
+            }); 
+        }
+       
+    } else {
+        res.status(400).send({
+            message: "Your mission has to be En cours ou Cloture"
+        }); 
+    }
+    
+}
+
 

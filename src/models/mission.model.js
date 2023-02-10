@@ -28,27 +28,32 @@ const MissionSchema = mongoose.Schema(
         required: true,
         minLength: 4,
     },
-    missionProfessions: {
+    missionProfessions: [{
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "profession",
-    },
-    missionSkills: {
-        required: true,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "skills",
-    },
+    }],
+    missionSkills: [
+        {
+            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "skills",
+        }
+    ],
     missionStatus: {
         type: String,
         required: true,
         default: "En cours"
     },
-    missionPeople: {
-        required: true,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Freelance",
-        status: { type : String, enum: ["accepted", "refused", "pending"]}
-    }
+    missionPeople: [
+        {
+            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Freelance",
+            status: { type : String, enum: ["accepted", "refused", "pending"], default : 'pending'}
+        }
+    ]
+       
   },
   {
     timestamps: true,
