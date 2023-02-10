@@ -35,6 +35,7 @@
 # Par ou commencer #
 
     Dans localhost:PORT/api/v1/admin/register
+
 - Faite un post :
 {
     userMail : example@ynov.com,
@@ -51,6 +52,7 @@
     et prenez le userToken et mettez le dans le .env
 
     Dans localhost:PORT/api/v1/company/register
+
 - Faite un post :
 {
     "firstName": "Andre",
@@ -72,6 +74,7 @@
     et prenez le userToken et mettez le dans le .env
 
     Dans localhost:PORT/api/v1/company/register
+    
 - Faite un post :
 {
     "firstName": "Andre",
