@@ -1,8 +1,10 @@
 const Freelance = require("../models/freelance.model");
 const Mission = require("../models/mission.model");
 const Company = require("../models/company.model");
+const Skill = require("../models/skills.model");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const { search } = require("../routes/company.route");
 //USER PROFIL AND OPTIONS
 
 exports.getProfil = (req, res) => {
@@ -59,14 +61,68 @@ exports.forgetPassword = (req, res) => {
     })
 }
 
+exports.getFreelanceByCity = (req, res) => {
+    const emptyArr = [];
+    const searcha = req.body.userCity;
+    Freelance.find({$userCity: {$search: searcha}}).then((freelance) => {
+        for (let index = 0; index < freelance.length; index++) {
+           console.log(freelance[index].userCity);
+           console.log(searcha);
+           if(freelance[index].userCity === searcha) {
+                emptyArr.push(freelance[index]);
+           } else {
+                console.log("No");
+           }
+        }
+        res.send(emptyArr);
+        console.log(emptyArr);
+    });
+}
+
+exports.getFreelanceBySkill = (req, res) => {
+    const emptyArr = [];
+    const emptyArr2 = [];
+    const searcha = req.body.skillName;
+    Skill.find({$skillName: {$search: searcha}}).then((skill) => {
+        for (let index = 0; index < skill.length; index++) {
+           if(skill[index].skillName == searcha) {
+            emptyArr.push(skill[index]._id);
+            } else {
+             console.log("No");
+            }   
+        }
+        console.log(emptyArr);
+        Freelance.find().then((freelance) => {
+            for (let i = 0; i < freelance.length; i++) {
+                for (let k = 0; k < freelance[i].skills.length; k++) {
+                    for (let l = 0; l < emptyArr.length; l++) {
+                        console.log("Tentative True : " + emptyArr[l]);
+                        console.log(Object.is(`63e413b9e6dc0f8cb14d5358`, freelance[i].skills[k]))
+                        console.log("Tentative True 2 : " + freelance[i].skills[k]);
+                        console.log((emptyArr[l]) == (freelance[i].skills[k]));
+                        if(emptyArr[l] === freelance[i].skills[k]) {
+                            emptyArr2.push(freelance[i])
+                        } else {
+                            console.log("No");
+                        }
+                    }
+                }
+            }
+            console.log(emptyArr2);
+            res.send(emptyArr2)
+        })
+    })
+}
+
 exports.getMyMission = (req, res) => {    
     Mission.find({missionCreator: req.userToken.id}).then((missions) => {
-        
         res.send(missions);
         console.log(missions);
-        
-        
     }).catch((err) => res.status(400).send(err));
+}
+
+exports.getFreelanceByTaxe = (req, res) => {
+    
 }
 
 exports.getAllFreelance = (req, res) => {
@@ -110,8 +166,7 @@ exports.createMission = (req, res) => {
             for (let index = 0; index < mission.missionPeople.length; index++) {
                 console.log(mission.missionPeople[index]);
                 Company.findById(req.userToken.id).then((com) => {  
-                Freelance.findByIdAndUpdate({_id: mission.missionPeople[index]}, { $push: {mission: mission._id, status: "pending"}}).then((updated) => {
-
+                     Freelance.findByIdAndUpdate({_id: mission.missionPeople[index]}, { $push: {mission: mission._id, status: "pending"}}).then((updated) => {
                         console.log(updated.firstName);
                         console.log(updated.userMail);
                         console.log(com.companyName);
@@ -122,15 +177,16 @@ exports.createMission = (req, res) => {
             }
             
             res.status(200).send({
-                message: "Freelance added"
+                message: "Mission added"
             })  
         }
     }).catch((err) => res.status(400).send(err));
 }
 
 exports.modifyMission = (req, res) => {
+
     if(req.body.missionStatus === "En cours" || req.body.missionStatus === "Cloture" || req.body.missionStatus === undefined )  {
-        if(req.body.missionPeople.length < 0 || req.body.missionPeople === undefined) {
+        if(req.body.missionPeople === undefined) {
             Mission.findByIdAndUpdate(req.params.id, req.body).then((mission) => {
                 if(mission.missionCreator === req.userToken.id) {
                     if(!mission) {
@@ -191,7 +247,7 @@ function sendMailTo(userTo, sentTo, companyOf, companyMail) {
   
     
       let info = transporter.sendMail({
-      from: "'" + companyOf + "'" + "<" + companyMail + ">",
+      from: "'" + companyOf + "'" + "<demo.12345121@gmail.com>",
       to: "'" + userTo + "'" + "<" + sentTo + ">", 
       subject: "You have a new mission!", 
       text: `

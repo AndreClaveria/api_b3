@@ -1,6 +1,8 @@
 const Freelance = require("../models/freelance.model");
 const Mission = require("../models/mission.model");
 const Company= require("../models/company.model");
+const Profession = require("../models/profession.model");
+const Skill = require("../models/skills.model");
 const bcrypt = require("bcrypt");
 
 //USER PROFIL AND OPTIONS
@@ -53,4 +55,39 @@ exports.forgetPassword = (req, res) => {
             }).catch((err) => res.status(400).send(err));
         }
     })
+}
+
+exports.getAllSkills = (req, res) => {
+    Skill.find().then((skills) => {
+        res.send(skills);
+        console.log(skills);
+    }).catch((err) => res.status(400).send(err));
+}
+
+exports.getAllProfessions = (req, res) => {
+    Profession.find().then((professions) => {
+        res.send(professions);
+        console.log(professions);
+    }).catch((err) => res.status(400).send(err));
+}
+
+exports.getMyMission = (req, res) => {
+    const emptyArr = [];
+   
+    Freelance.findById(req.userToken.id).then((freelance) => {
+        console.log(freelance)
+        for (let index = 0; index < freelance.mission.length; index++) {
+           emptyArr.push(freelance.mission[index]);
+        }
+        res.send(emptyArr);
+    })
+    
+}
+
+exports.getOneMission = (req, res) => {
+   
+    Mission.findById(req.params.id).then((mission) => {
+        res.send(mission);
+    }).catch((err) => res.status(400).send(err));
+    
 }

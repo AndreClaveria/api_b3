@@ -14,7 +14,8 @@ router.get('/profil/missions', verifyToken, verifyIsCompany, company.getMyMissio
 router.get('/freelances', verifyToken, verifyIsCompany, company.getAllFreelance);
 router.put('/forget', company.forgetPassword, verifyToken, verifyIsCompany, company.getMyMission);
 router.put('/missions/:id', verifyToken, verifyIsCompany, company.modifyMission);
-
+router.post('/freelances/searchName', verifyToken, verifyIsCompany, company.getFreelanceByCity);
+router.post('/freelances/searchSkill', verifyToken, verifyIsCompany, company.getFreelanceBySkill);
 router.post('/register', checkName, checkMail, checkPassword, checkCompanyData, validation, auth.registerCompany);
 router.post('/login', checkMail, checkPassword, validation, auth.loginCompany);
 router.post('/missions/create', verifyToken, verifyIsCompany, company.createMission);

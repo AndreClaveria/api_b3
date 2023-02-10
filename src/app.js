@@ -18,5 +18,6 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(errorHandler);
 
 app.listen(process.env.PORT, function () {
+    
     console.log("Server launch : localhost:3000/api/v1/");
 }); 
