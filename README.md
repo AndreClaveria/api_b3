@@ -73,7 +73,8 @@
 
     et prenez le userToken et mettez le dans le .env
 
-    Dans localhost:PORT/api/v1/company/register
+#
+    Dans localhost:PORT/api/v1/freelance/register
 
 - Faite un post :
 {
@@ -85,7 +86,8 @@
     "dailyTax": 100
 }
 
-    puis localhost:PORT/api/v1/company/login
+#
+    puis localhost:PORT/api/v1/freelance/login
 - Faite un post :
 {
     userMail : "example@ynov.com",
