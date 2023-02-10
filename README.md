@@ -74,7 +74,7 @@
     et prenez le userToken et mettez le dans le .env
 
     Dans localhost:PORT/api/v1/company/register
-    
+
 - Faite un post :
 {
     "firstName": "Andre",
