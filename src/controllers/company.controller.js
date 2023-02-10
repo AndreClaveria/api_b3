@@ -2,7 +2,7 @@ const Freelance = require("../models/freelance.model");
 const Mission = require("../models/mission.model");
 const Company = require("../models/company.model");
 const bcrypt = require("bcrypt");
-
+const nodemailer = require("nodemailer");
 //USER PROFIL AND OPTIONS
 
 exports.getProfil = (req, res) => {
@@ -109,10 +109,18 @@ exports.createMission = (req, res) => {
   
             for (let index = 0; index < mission.missionPeople.length; index++) {
                 console.log(mission.missionPeople[index]);
-                Freelance.findByIdAndUpdate({_id: mission.missionPeople[index]}, { $push: {mission: mission._id}}).then((updated) => {
-                   
-                }).catch((err) => res.status(400).send(err));
+                Company.findById(req.userToken.id).then((com) => {  
+                Freelance.findByIdAndUpdate({_id: mission.missionPeople[index]}, { $push: {mission: mission._id, status: "pending"}}).then((updated) => {
+
+                        console.log(updated.firstName);
+                        console.log(updated.userMail);
+                        console.log(com.companyName);
+                        console.log(com.userMail);
+                        sendMailTo(updated.firstName, updated.userMail, com.companyName,com.userMail)
+                    })
+                })
             }
+            
             res.status(200).send({
                 message: "Freelance added"
             })  
@@ -122,7 +130,7 @@ exports.createMission = (req, res) => {
 
 exports.modifyMission = (req, res) => {
     if(req.body.missionStatus === "En cours" || req.body.missionStatus === "Cloture" || req.body.missionStatus === undefined )  {
-        if(req.body.missionPeople.length <= 3 || req.body.missionPeople === undefined) {
+        if(req.body.missionPeople.length < 0 || req.body.missionPeople === undefined) {
             Mission.findByIdAndUpdate(req.params.id, req.body).then((mission) => {
                 if(mission.missionCreator === req.userToken.id) {
                     if(!mission) {
@@ -133,25 +141,6 @@ exports.modifyMission = (req, res) => {
                     } 
                     
                     if(mission.missionStatus === "En cours" || mission.missionStatus === "Cloture") {
-                        
-                            for (let index = 0; index < mission.missionPeople.length; index++) {
-                                console.log(mission.missionPeople[index]);
-                                Freelance.findById(mission.missionPeople[index]).then((modify) => {
-                              
-                                    for (let i = 0; i < modify.mission.length; i++) {
-                                        console.log(modify.mission.length)
-                                        if(modify.mission.length == 0) {
-                                            console.log("Ton tableau est vide")
-                                        }
-                                        if(req.params.id == modify.mission[i]) {
-                                            console.log( "Pour " + mission.missionPeople[index] + " j'ai déja trouvé " + modify.mission[i])
-                                            break;
-                                        } 
-                                    }
-                                    
-                                })
-                            }
-                            console.log(mission.missionPeople[0]);
                         
                         res.status(200).send({
                             message: "Mission : " + mission.missionTitle + " changed"
@@ -175,7 +164,7 @@ exports.modifyMission = (req, res) => {
             }));
         } else {
             res.status(400).send({
-                message: "You cannot put more than 3 freelance in your mission"
+                message: "You can just put your freelance during the creation of the mission"
             }); 
         }
        
@@ -186,5 +175,39 @@ exports.modifyMission = (req, res) => {
     }
     
 }
+
+function sendMailTo(userTo, sentTo, companyOf, companyMail) {
+
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+    
+      auth: {
+          user: 'demo.12345121@gmail.com', 
+          pass: 'zhrqbikaolfmsmat'
+      },
+    });
+  
+    
+      let info = transporter.sendMail({
+      from: "'" + companyOf + "'" + "<" + companyMail + ">",
+      to: "'" + userTo + "'" + "<" + sentTo + ">", 
+      subject: "You have a new mission!", 
+      text: `
+      Hello ${userTo}, 
+  
+      You have been selected to take part on this mission by ${companyOf}, 
+      Now you have the choice to accept or decline this mission!
+  
+      Have a good day!
+      
+      Our mail : ${companyMail}`, 
+      });
+      console.log("Message sent: %s", info.messageId);
+    
+
+  }
+    
 
 
