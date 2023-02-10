@@ -64,7 +64,7 @@
     "userPassword": "ynov1234",
     "companyName": "Paris Ynov Campus",
     "companyStatus": "SARL",
-    "companySiret": "123456789",
+    "companySiret": "123456789"
 }
 
     puis localhost:PORT/api/v1/company/login
